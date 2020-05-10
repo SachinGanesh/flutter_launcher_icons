@@ -4,6 +4,7 @@ import 'package:args/args.dart';
 import 'package:yaml/yaml.dart';
 import 'package:flutter_launcher_icons/android.dart' as android_launcher_icons;
 import 'package:flutter_launcher_icons/ios.dart' as ios_launcher_icons;
+import 'package:flutter_launcher_icons/web.dart' as web_launcher_icons;
 import 'package:flutter_launcher_icons/constants.dart';
 import 'package:flutter_launcher_icons/custom_exceptions.dart';
 
@@ -20,7 +21,7 @@ Future<void> createIconsFromArguments(List<String> arguments) async {
   final ArgResults argResults = parser.parse(arguments);
 
   if (argResults[helpFlag]) {
-    stdout.writeln('Generates icons for iOS and Android');
+    stdout.writeln('Generates icons for iOS, Android and Web');
     stdout.writeln(parser.usage);
     exit(0);
   }
@@ -63,6 +64,9 @@ Future<void> createIconsFromConfig(Map<String, dynamic> config) async {
   }
   if (isNeedingNewIOSIcon(config)) {
     ios_launcher_icons.createIcons(config);
+  }
+  if (isNeedingNewWebIcon(config)) {
+    web_launcher_icons.createIcons(config);
   }
 }
 
@@ -131,12 +135,14 @@ Map<String, dynamic> loadConfigFile(String path, String fileOptionResult) {
 bool isImagePathInConfig(Map<String, dynamic> flutterIconsConfig) {
   return flutterIconsConfig.containsKey('image_path') ||
       (flutterIconsConfig.containsKey('image_path_android') &&
-          flutterIconsConfig.containsKey('image_path_ios'));
+          flutterIconsConfig.containsKey('image_path_ios') &&
+          flutterIconsConfig.containsKey('image_path_web'));
 }
 
 bool hasPlatformConfig(Map<String, dynamic> flutterIconsConfig) {
   return hasAndroidConfig(flutterIconsConfig) ||
-      hasIOSConfig(flutterIconsConfig);
+      hasIOSConfig(flutterIconsConfig) ||
+      hasWebConfig(flutterIconsConfig);
 }
 
 bool hasAndroidConfig(Map<String, dynamic> flutterLauncherIcons) {
@@ -161,4 +167,13 @@ bool hasIOSConfig(Map<String, dynamic> flutterLauncherIconsConfig) {
 bool isNeedingNewIOSIcon(Map<String, dynamic> flutterLauncherIconsConfig) {
   return hasIOSConfig(flutterLauncherIconsConfig) &&
       flutterLauncherIconsConfig['ios'] != false;
+}
+
+bool hasWebConfig(Map<String, dynamic> flutterLauncherIconsConfig) {
+  return flutterLauncherIconsConfig.containsKey('web');
+}
+
+bool isNeedingNewWebIcon(Map<String, dynamic> flutterLauncherIconsConfig) {
+  return hasWebConfig(flutterLauncherIconsConfig) &&
+      flutterLauncherIconsConfig['web'] != false;
 }
