@@ -12,7 +12,7 @@ class WebIconTemplate {
   final int size;
 }
 
-List<WebIconTemplate> webFevicons = <WebIconTemplate>[
+List<WebIconTemplate> webFavicons = <WebIconTemplate>[
   WebIconTemplate(name: '', size: 48),
   // WebIconTemplate(name: '-16x16', size: 16),
   // WebIconTemplate(name: '-32x32', size: 32),
@@ -29,8 +29,8 @@ void createIcons(Map<String, dynamic> config) {
 
   print('Adding Web icons');
   //save favicon, always overwrite
-  for (WebIconTemplate template in webFevicons) {
-    saveNewFevicons(template, image);
+  for (WebIconTemplate template in webFavicons) {
+    saveNewFavicons(template, image);
   }
   // If the Web configuration is a string then the user has specified a new icon to be created
   // and for the old icon file to be kept
@@ -43,9 +43,9 @@ void createIcons(Map<String, dynamic> config) {
 /// Note: Do not change interpolation unless you end up with better results (see issue for result when using cubic
 /// interpolation)
 /// https://github.com/fluttercommunity/flutter_launcher_icons/issues/101#issuecomment-495528733
-void saveNewFevicons(WebIconTemplate template, Image image) {
+void saveNewFavicons(WebIconTemplate template, Image image) {
   final Image newFile = createResizedImage(template.size, image);
-  File(webRootFolder + 'fevicon' + template.name + '.png')
+  File(webRootFolder + 'favicon' + template.name + '.png')
       .create(recursive: true)
       .then((File file) {
     file.writeAsBytesSync(encodePng(newFile));
